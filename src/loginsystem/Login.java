@@ -50,8 +50,8 @@ public class Login extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel loginLabel = new JLabel("User Login");
-		loginLabel.setBounds(174, 21, 161, 44);
+		JLabel loginLabel = new JLabel("SIGN IN");
+		loginLabel.setBounds(166, 21, 176, 44);
 		loginLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 		loginLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(loginLabel);
