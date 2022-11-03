@@ -15,9 +15,6 @@ import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField usernameTextField;
@@ -39,27 +36,27 @@ public class Login extends JFrame {
 		loginLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(loginLabel);
 		
-		JLabel usernameLabel = new JLabel("username");
-		usernameLabel.setBounds(48, 87, 97, 44);
-		usernameLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		contentPane.add(usernameLabel);
+		JLabel lblUsername = new JLabel("Username:");
+		lblUsername.setBounds(48, 89, 97, 44);
+		lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		contentPane.add(lblUsername);
 		
 		usernameTextField = new JTextField();
-		usernameTextField.setBackground(new Color(249, 249, 249));
-		usernameTextField.setBounds(155, 87, 308, 44);
+		usernameTextField.setBackground(new Color(245, 245, 245));
+		usernameTextField.setBounds(155, 89, 308, 44);
 		usernameTextField.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		contentPane.add(usernameTextField);
 		usernameTextField.setColumns(10);
 		
-		JLabel passwordLabel = new JLabel("password");
-		passwordLabel.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		passwordLabel.setBounds(48, 142, 97, 44);
-		contentPane.add(passwordLabel);
+		JLabel lblPassword = new JLabel("Password:");
+		lblPassword.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblPassword.setBounds(48, 157, 97, 44);
+		contentPane.add(lblPassword);
 		
 		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		passwordField.setBackground(new Color(249, 249, 249));
-		passwordField.setBounds(155, 145, 308, 44);
+		passwordField.setBackground(new Color(245, 245, 245));
+		passwordField.setBounds(155, 157, 308, 44);
 		contentPane.add(passwordField);
 		
 		JButton loginBtn = new JButton("Login");
@@ -71,7 +68,7 @@ public class Login extends JFrame {
 		loginBtn.setForeground(new Color(255, 255, 255));
 		loginBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
 		loginBtn.setBounds(102, 225, 144, 44);
-		loginBtn.setBackground(new Color(0, 128, 64));
+		loginBtn.setBackground(new Color(0, 149, 0));
 		loginBtn.setOpaque(true);
 		loginBtn.setBorderPainted(false);
 		contentPane.add(loginBtn);
@@ -84,7 +81,7 @@ public class Login extends JFrame {
 			}
 		});
 		clearBtn.setForeground(new Color(255, 255, 255));
-		clearBtn.setBackground(new Color(128, 0, 0));
+		clearBtn.setBackground(new Color(170, 0, 0));
 		clearBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
 		clearBtn.setBounds(269, 225, 144, 44);
 		clearBtn.setOpaque(true);
