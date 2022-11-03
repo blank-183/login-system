@@ -36,10 +36,10 @@ public class Login extends JFrame {
 		loginLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(loginLabel);
 		
-		JLabel lblUsername = new JLabel("Username:");
-		lblUsername.setBounds(48, 89, 97, 44);
-		lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		contentPane.add(lblUsername);
+		JLabel lblEmail = new JLabel("Email:");
+		lblEmail.setBounds(48, 89, 97, 44);
+		lblEmail.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		contentPane.add(lblEmail);
 		
 		usernameTextField = new JTextField();
 		usernameTextField.setBackground(new Color(245, 245, 245));
@@ -59,35 +59,36 @@ public class Login extends JFrame {
 		passwordField.setBounds(155, 157, 308, 44);
 		contentPane.add(passwordField);
 		
-		JButton loginBtn = new JButton("Login");
-		loginBtn.addActionListener(new ActionListener() {
+		JButton signInBtn = new JButton("Sign in");
+		signInBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				usernameTextField.setText("Login");
 			}
 		});
-		loginBtn.setForeground(new Color(255, 255, 255));
-		loginBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
-		loginBtn.setBounds(102, 225, 144, 44);
-		loginBtn.setBackground(new Color(0, 149, 0));
-		loginBtn.setOpaque(true);
-		loginBtn.setBorderPainted(false);
-		contentPane.add(loginBtn);
+		signInBtn.setForeground(new Color(255, 255, 255));
+		signInBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
+		signInBtn.setBounds(269, 225, 144, 44);
+		signInBtn.setBackground(new Color(0, 149, 0));
+		signInBtn.setOpaque(true);
+		signInBtn.setBorderPainted(false);
+		contentPane.add(signInBtn);
 		
-		JButton clearBtn = new JButton("Clear");
-		clearBtn.addActionListener(new ActionListener() {
+		JButton signUpBtn = new JButton("Sign up");
+		signUpBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				usernameTextField.setText("");
-				passwordField.setText("");
+				new Registration();
+				dispose();
 			}
 		});
-		clearBtn.setForeground(new Color(255, 255, 255));
-		clearBtn.setBackground(new Color(170, 0, 0));
-		clearBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
-		clearBtn.setBounds(269, 225, 144, 44);
-		clearBtn.setOpaque(true);
-		clearBtn.setBorderPainted(false);
-		contentPane.add(clearBtn);
+		signUpBtn.setForeground(new Color(255, 255, 255));
+		signUpBtn.setBackground(new Color(0, 116, 232));
+		signUpBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
+		signUpBtn.setBounds(103, 225, 144, 44);
+		signUpBtn.setOpaque(true);
+		signUpBtn.setBorderPainted(false);
+		contentPane.add(signUpBtn);
 		
+		setLocationRelativeTo(null);
 		setVisible(true);
 	}
 }

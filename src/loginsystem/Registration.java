@@ -10,6 +10,8 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Registration extends JFrame {
 
@@ -32,7 +34,7 @@ public class Registration extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel signUpLabel = new JLabel("REGISTER NEW USER");
+		JLabel signUpLabel = new JLabel("CREATE AN ACCOUNT");
 		signUpLabel.setBounds(108, 26, 342, 44);
 		signUpLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		signUpLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
@@ -63,14 +65,14 @@ public class Registration extends JFrame {
 		lblAddress.setBounds(58, 236, 109, 44);
 		contentPane.add(lblAddress);
 		
-		JButton signUpBtn = new JButton("Sign up");
-		signUpBtn.setForeground(new Color(255, 255, 255));
-		signUpBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
-		signUpBtn.setBounds(215, 522, 129, 44);
-		signUpBtn.setBackground(new Color(0, 149, 0));
-		signUpBtn.setOpaque(true);
-		signUpBtn.setBorderPainted(false);
-		contentPane.add(signUpBtn);
+		JButton registerBtn = new JButton("Register");
+		registerBtn.setForeground(new Color(255, 255, 255));
+		registerBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
+		registerBtn.setBounds(300, 522, 150, 44);
+		registerBtn.setBackground(new Color(0, 149, 0));
+		registerBtn.setOpaque(true);
+		registerBtn.setBorderPainted(false);
+		contentPane.add(registerBtn);
 		
 		firstNameTextField = new JTextField();
 		firstNameTextField.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -116,5 +118,23 @@ public class Registration extends JFrame {
 		rePasswordField.setBackground(new Color(245, 245, 245));
 		rePasswordField.setBounds(188, 448, 318, 44);
 		contentPane.add(rePasswordField);
+		
+		JButton signInBtn = new JButton("Sign in");
+		signInBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new Login();
+				dispose();
+			}
+		});
+		signInBtn.setOpaque(true);
+		signInBtn.setForeground(Color.WHITE);
+		signInBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
+		signInBtn.setBorderPainted(false);
+		signInBtn.setBackground(new Color(0, 116, 232));
+		signInBtn.setBounds(108, 522, 150, 44);
+		contentPane.add(signInBtn);
+		
+		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 }
