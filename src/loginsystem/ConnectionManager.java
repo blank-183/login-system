@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConnectionManager {
 
-	private static String url = "jdbc:mysql://localhost:3306/demo";    
+	private static String url = "jdbc:mysql://localhost:3306/login";    
     private static String username = "iveej";   
     private static String password = "Akosiivee17.";
     private static Connection conn;
@@ -18,7 +18,7 @@ public class ConnectionManager {
             conn = DriverManager.getConnection(url, username, password);
             System.out.println("Database connection successful!");
         } catch (SQLException ex) {
-            System.out.println("Failed to create the database connection."); 
+            System.out.println("Failed to create the database connection.");
         }
         return conn;
     }

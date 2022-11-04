@@ -5,12 +5,21 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
+import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
 public class Registration extends JFrame {
@@ -66,6 +75,64 @@ public class Registration extends JFrame {
 		contentPane.add(lblAddress);
 		
 		JButton registerBtn = new JButton("Register");
+		registerBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Connection conn = null;
+				// database connection
+				conn = ConnectionManager.getConnection();
+				if((conn != null) && isComplete() && isEmailValid() && isSamePassword() && isPasswordValid()) {
+					try {
+						// the mysql insert statement
+					    String query = "INSERT INTO USERS (first_name, last_name, address, email, password)" + " values (?, ?, ?, ?, ?)";
+					    
+					    // create the mysql insert preparedstatement
+					    try(PreparedStatement stmt = conn.prepareStatement(query)) {
+					        stmt.setString(1, firstNameTextField.getText());
+					        stmt.setString(2, lastNameTextField.getText());
+						    stmt.setString(3, addressTextField.getText());
+						    stmt.setString(4, emailTextField.getText());
+						    stmt.setString(5, toHexString(getSHA(new String(passwordField.getPassword()))));
+						    
+						 // execute the prepared statement
+						    stmt.execute();
+					    }
+					    conn.close();
+
+					} catch (Exception err) {
+						System.err.println(err.getMessage());
+					}
+					
+					JOptionPane.showMessageDialog(contentPane, 
+												  "Registered successfully! You can now log in.", 
+												  "Success", JOptionPane.INFORMATION_MESSAGE);
+					new Login();
+					dispose();
+					
+				} else if (!isComplete()){
+					JOptionPane.showMessageDialog(contentPane, 
+							  "Fields cannot be empty!", 
+							  "Error", JOptionPane.ERROR_MESSAGE);
+				} else if(!isEmailValid()) {
+					JOptionPane.showMessageDialog(contentPane, 
+							  "Please enter a valid email!", 
+							  "Error", JOptionPane.ERROR_MESSAGE);
+				} else if(!isSamePassword()) {
+					JOptionPane.showMessageDialog(contentPane, 
+							  "Passwords should be the same!", 
+							  "Error", JOptionPane.ERROR_MESSAGE);
+				} else if (!isPasswordValid()) {
+					JOptionPane.showMessageDialog(contentPane, 
+							  "Password length should be atleast 8 characters!", 
+							  "Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(contentPane, 
+							  "Failed to connect to the database", 
+							  "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
+				
+			}
+		});
 		registerBtn.setForeground(new Color(255, 255, 255));
 		registerBtn.setFont(new Font("Tahoma", Font.BOLD, 20));
 		registerBtn.setBounds(300, 522, 150, 44);
@@ -137,4 +204,61 @@ public class Registration extends JFrame {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
+	
+	public byte[] getSHA(String input) throws NoSuchAlgorithmException
+    {
+        // Static getInstance method is called with hashing SHA
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+ 
+        // digest() method called
+        // to calculate message digest of an input
+        // and return array of byte
+        return md.digest(input.getBytes(StandardCharsets.UTF_8));
+    }
+     
+    public String toHexString(byte[] hash)
+    {
+        // Convert byte array into signum representation
+        BigInteger number = new BigInteger(1, hash);
+ 
+        // Convert message digest into hex value
+        StringBuilder hexString = new StringBuilder(number.toString(16));
+ 
+        // Pad with leading zeros
+        while (hexString.length() < 64)
+        {
+            hexString.insert(0, '0');
+        }
+ 
+        return hexString.toString();
+    }
+    
+    public boolean isComplete() {
+    	return !(firstNameTextField.getText().equals("") || 
+    			 lastNameTextField.getText().equals("") ||
+    			 addressTextField.getText().equals("") ||
+    			 emailTextField.getText().equals("") ||
+    			 new String(passwordField.getPassword()).equals(""));
+    }
+    
+    public boolean isSamePassword() {
+    	String password = new String(passwordField.getPassword());
+    	String rePassword = new String(rePasswordField.getPassword());
+    	
+    	return (password.equals(rePassword));
+    }
+    
+    public boolean isPasswordValid() {
+    	return (passwordField.getPassword().length >= 8);
+    }
+    
+    public boolean isEmailValid()
+    {
+        String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"; 
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (emailTextField.getText() == null)
+            return false;
+        return pat.matcher(emailTextField.getText()).matches();
+    }
 }
