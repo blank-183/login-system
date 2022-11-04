@@ -22,7 +22,7 @@ public class Details extends JFrame {
 	private JTextField emailTextField;
 	private JTextField addressTextField;
 
-	public Details() {
+	public Details(int userId) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 580, 425);
 		contentPane = new JPanel();
@@ -87,5 +87,8 @@ public class Details extends JFrame {
 		addressTextField.setColumns(10);
 		addressTextField.setBounds(126, 225, 400, 44);
 		contentPane.add(addressTextField);
+		
+		setLocationRelativeTo(null);
+		setVisible(true);
 	}
 }

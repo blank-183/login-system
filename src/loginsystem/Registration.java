@@ -80,11 +80,10 @@ public class Registration extends JFrame {
 				Connection conn = null;
 				// database connection
 				conn = ConnectionManager.getConnection();
+				// the mysql insert statement
+			    String query = "INSERT INTO USERS (first_name, last_name, address, email, password)" + " values (?, ?, ?, ?, ?)";
 				if((conn != null) && isComplete() && isEmailValid() && isSamePassword() && isPasswordValid()) {
 					try {
-						// the mysql insert statement
-					    String query = "INSERT INTO USERS (first_name, last_name, address, email, password)" + " values (?, ?, ?, ?, ?)";
-					    
 					    // create the mysql insert preparedstatement
 					    try(PreparedStatement stmt = conn.prepareStatement(query)) {
 					        stmt.setString(1, firstNameTextField.getText());
@@ -103,7 +102,7 @@ public class Registration extends JFrame {
 					}
 					
 					JOptionPane.showMessageDialog(contentPane, 
-												  "Registered successfully! You can now log in.", 
+												  "Your registration is successful! You can now log in.", 
 												  "Success", JOptionPane.INFORMATION_MESSAGE);
 					new Login();
 					dispose();
@@ -126,7 +125,7 @@ public class Registration extends JFrame {
 							  "Error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					JOptionPane.showMessageDialog(contentPane, 
-							  "Failed to connect to the database", 
+							  "There is something wrong with the server.", 
 							  "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				
