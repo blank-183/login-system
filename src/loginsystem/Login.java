@@ -12,31 +12,27 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
-public class Login extends JFrame {
+public class Login extends HashPass {
 
-	private static final long serialVersionUID = 1L;
+	private JFrame frame = new JFrame();
 	private JPanel contentPane;
 	private JTextField emailTextField;
 	private JPasswordField passwordField;
 
 	public Login() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 525, 354);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 525, 354);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		setContentPane(contentPane);
+		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel loginLabel = new JLabel("SIGN IN");
@@ -125,7 +121,7 @@ public class Login extends JFrame {
 		signUpBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Registration();
-				dispose();
+				frame.dispose();
 			}
 		});
 		signUpBtn.setForeground(new Color(255, 255, 255));
@@ -136,48 +132,20 @@ public class Login extends JFrame {
 		signUpBtn.setBorderPainted(false);
 		contentPane.add(signUpBtn);
 		
-		setLocationRelativeTo(null);
-		setVisible(true);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
 	}
 	
-	public byte[] getSHA(String input) throws NoSuchAlgorithmException
-    {
-        // Static getInstance method is called with hashing SHA
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
- 
-        // digest() method called
-        // to calculate message digest of an input
-        // and return array of byte
-        return md.digest(input.getBytes(StandardCharsets.UTF_8));
-    }
-     
-    public String toHexString(byte[] hash)
-    {
-        // Convert byte array into signum representation
-        BigInteger number = new BigInteger(1, hash);
- 
-        // Convert message digest into hex value
-        StringBuilder hexString = new StringBuilder(number.toString(16));
- 
-        // Pad with leading zeros
-        while (hexString.length() < 64)
-        {
-            hexString.insert(0, '0');
-        }
- 
-        return hexString.toString();
-    }
-    
-    public boolean isComplete() {
+    private boolean isComplete() {
     	return !(emailTextField.getText().equals("") ||
     			 new String(passwordField.getPassword()).equals(""));
     }
     
-    public boolean isPasswordValid() {
+    private boolean isPasswordValid() {
     	return (passwordField.getPassword().length >= 8);
     }
     
-    public boolean isEmailValid()
+    private boolean isEmailValid()
     {
         String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"; 
 
@@ -187,7 +155,7 @@ public class Login extends JFrame {
         return pat.matcher(emailTextField.getText()).matches();
     }
     
-    public void readResultSet(ResultSet rst) {
+    private void readResultSet(ResultSet rst) {
     	Integer userId = null;
 	    String email = emailTextField.getText();
 	    String password = new String(passwordField.getPassword());
@@ -202,7 +170,7 @@ public class Login extends JFrame {
 							  "User found! You are now logged in.", 
 							  "Success", JOptionPane.INFORMATION_MESSAGE);
 					new Details(userId);
-					dispose();
+					frame.dispose();
 				} else {
 					JOptionPane.showMessageDialog(contentPane, 
 							  "Wrong email or password!", 

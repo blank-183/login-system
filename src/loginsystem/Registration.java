@@ -6,25 +6,20 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
-public class Registration extends JFrame {
+public class Registration extends HashPass {
 
-	private static final long serialVersionUID = 1L;
+	private JFrame frame = new JFrame();
 	private JPanel contentPane;
 	private JTextField firstNameTextField;
 	private JTextField lastNameTextField;
@@ -34,13 +29,13 @@ public class Registration extends JFrame {
 	private JPasswordField rePasswordField;
 
 	public Registration() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 575, 660);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 575, 660);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		setContentPane(contentPane);
+		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel signUpLabel = new JLabel("CREATE AN ACCOUNT");
@@ -105,7 +100,7 @@ public class Registration extends JFrame {
 												  "Your registration is successful! You can now log in.", 
 												  "Success", JOptionPane.INFORMATION_MESSAGE);
 					new Login();
-					dispose();
+					frame.dispose();
 					
 				} else if (!isComplete()){
 					JOptionPane.showMessageDialog(contentPane, 
@@ -189,7 +184,7 @@ public class Registration extends JFrame {
 		signInBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new Login();
-				dispose();
+				frame.dispose();
 			}
 		});
 		signInBtn.setOpaque(true);
@@ -200,39 +195,11 @@ public class Registration extends JFrame {
 		signInBtn.setBounds(108, 522, 150, 44);
 		contentPane.add(signInBtn);
 		
-		setLocationRelativeTo(null);
-		setVisible(true);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
 	}
-	
-	public byte[] getSHA(String input) throws NoSuchAlgorithmException
-    {
-        // Static getInstance method is called with hashing SHA
-        MessageDigest md = MessageDigest.getInstance("SHA-256");
- 
-        // digest() method called
-        // to calculate message digest of an input
-        // and return array of byte
-        return md.digest(input.getBytes(StandardCharsets.UTF_8));
-    }
-     
-    public String toHexString(byte[] hash)
-    {
-        // Convert byte array into signum representation
-        BigInteger number = new BigInteger(1, hash);
- 
-        // Convert message digest into hex value
-        StringBuilder hexString = new StringBuilder(number.toString(16));
- 
-        // Pad with leading zeros
-        while (hexString.length() < 64)
-        {
-            hexString.insert(0, '0');
-        }
- 
-        return hexString.toString();
-    }
     
-    public boolean isComplete() {
+    private boolean isComplete() {
     	return !(firstNameTextField.getText().equals("") || 
     			 lastNameTextField.getText().equals("") ||
     			 addressTextField.getText().equals("") ||
@@ -240,18 +207,18 @@ public class Registration extends JFrame {
     			 new String(passwordField.getPassword()).equals(""));
     }
     
-    public boolean isSamePassword() {
+    private boolean isSamePassword() {
     	String password = new String(passwordField.getPassword());
     	String rePassword = new String(rePasswordField.getPassword());
     	
     	return (password.equals(rePassword));
     }
     
-    public boolean isPasswordValid() {
+    private boolean isPasswordValid() {
     	return (passwordField.getPassword().length >= 8);
     }
     
-    public boolean isEmailValid()
+    private boolean isEmailValid()
     {
         String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"; 
 
