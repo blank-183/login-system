@@ -13,6 +13,7 @@ import javax.swing.JPasswordField;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
@@ -71,7 +72,10 @@ public class Registration extends HelperMethods {
 		JButton registerBtn = new JButton("Register");
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(isComplete() && isEmailValid() && isSamePassword() && isPasswordValid()) {
+				if(!isValidLength()) {
+					return;
+				}
+				if(isComplete() && isEmailValid() && !isEmailTaken() && isSamePassword() && isPasswordValid()) {
 					Connection conn = null;
 					conn = ConnectionManager.getConnection();
 				    String query = "INSERT INTO USERS (first_name, last_name, address, email, password)" + " values (?, ?, ?, ?, ?)";
@@ -88,6 +92,8 @@ public class Registration extends HelperMethods {
 					errorMessage("Fields cannot be empty!", contentPane);
 				} else if(!isEmailValid()) {
 					errorMessage("Please enter a valid email!", contentPane);
+				} else if (isEmailTaken()) {
+					errorMessage("Email is already taken! Please try another email.", contentPane);
 				} else if(!isSamePassword()) {
 					errorMessage("Passwords should be the same!", contentPane);
 				} else if (!isPasswordValid()) {
@@ -188,8 +194,7 @@ public class Registration extends HelperMethods {
     	return (passwordField.getPassword().length >= 8);
     }
     
-    private boolean isEmailValid()
-    {
+    private boolean isEmailValid() {
         String emailRegex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[\\a-zA-Z]{2,6}";
 
         Pattern pat = Pattern.compile(emailRegex);
@@ -197,6 +202,27 @@ public class Registration extends HelperMethods {
             return false;
         return pat.matcher(emailTextField.getText()).matches();
     }
+    
+    private boolean isEmailTaken() {
+    	Connection conn = null;
+		ResultSet rs = null;
+	    conn = ConnectionManager.getConnection();
+	    String query = "SELECT * FROM users WHERE email = ?;";
+	    
+    	try(PreparedStatement stmt = conn.prepareStatement(query)) {
+			stmt.setString(1, emailTextField.getText());
+			rs = stmt.executeQuery();
+			
+			if(rs.next()) {
+				return true;
+			}
+			conn.close();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+    	
+    	return false;
+	}
     
     private void runQuery(Connection con, String qry) {
     	try(PreparedStatement stmt = con.prepareStatement(qry)) {
@@ -212,5 +238,26 @@ public class Registration extends HelperMethods {
     	} catch (Exception err) {
     		System.err.println(err.getMessage());
     	}
+    }
+    
+    private boolean isValidLength() {
+    	if(firstNameTextField.getText().length() >= 45) {
+    		errorMessage("First name is too long!", contentPane);
+    		return false;
+    	} else if(lastNameTextField.getText().length() >= 45) {
+    		errorMessage("Last name is too long!", contentPane);
+    		return false;
+    	} else if(addressTextField.getText().length() >= 120) {
+    		errorMessage("Address is too long!", contentPane);
+    		return false;
+    	} else if(emailTextField.getText().length() >= 75) {
+    		errorMessage("Email is too long!", contentPane);
+    		return false;
+    	} else if(passwordField.getPassword().length >= 50) {
+    		errorMessage("Password is too long!", contentPane);
+    		return false;
+    	}
+    	
+    	return true;
     }
 }
