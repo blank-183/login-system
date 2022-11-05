@@ -24,7 +24,7 @@ Log out confirmation
 ### User Registration
 This is the user interface for registration. The user must complete every field in order to avoid an error message from showing.
 
-Other things to do in order to avoid the error message from displaying:
+Other things to consider in order to avoid the error message from displaying:
 - There are length limits for each field. Input should not be too lengthy.
 - User must enter a valid email
 - Email must be unique
