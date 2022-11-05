@@ -5,28 +5,34 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 
-public class Details extends JFrame {
+public class Details extends HelperMethods {
 	
-	private static final long serialVersionUID = 1L;
+	private JFrame frame = new JFrame();
 	private JPanel contentPane;
 	private JTextField nameTextField;
 	private JTextField emailTextField;
 	private JTextField addressTextField;
 
 	public Details(int userId) {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 580, 425);
+		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setBounds(100, 100, 580, 425);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		setContentPane(contentPane);
+		frame.setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblGreeting = new JLabel("Welcome back, User!");
@@ -52,8 +58,10 @@ public class Details extends JFrame {
 		JButton logOutBtn = new JButton("Log out");
 		logOutBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Login();
-				dispose();
+				if(confirmMessage(contentPane) == JOptionPane.YES_OPTION) {
+					new Login();
+					frame.dispose();
+				}
 			}
 		});
 		logOutBtn.setForeground(new Color(255, 255, 255));
@@ -84,8 +92,36 @@ public class Details extends JFrame {
 		addressTextField.setColumns(10);
 		addressTextField.setBounds(126, 225, 400, 44);
 		contentPane.add(addressTextField);
-		
-		setLocationRelativeTo(null);
-		setVisible(true);
+
+		getUserDetails(userId);
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(true);
+	}
+	
+	public void getUserDetails(int userId) {
+		Connection conn = null;
+		ResultSet rs = null;
+	    conn = ConnectionManager.getConnection();
+	    String query = "SELECT first_name, last_name, email, address FROM users WHERE user_id = ?;";
+	    
+    	try(PreparedStatement stmt = conn.prepareStatement(query)) {
+			stmt.setLong(1, userId);
+			rs = stmt.executeQuery();
+			
+			while(rs.next()) {
+				String firstName = rs.getString("first_name");
+				String lastName = rs.getString("last_name");
+				String fullName = firstName + " " + lastName;
+				String email = rs.getString("email");
+				String address = rs.getString("address");
+				
+				nameTextField.setText(fullName);
+				emailTextField.setText(email);
+				addressTextField.setText(address);
+			}
+			conn.close();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }

@@ -48,4 +48,9 @@ public class HelperMethods {
 				  message, 
 				  "Error", JOptionPane.ERROR_MESSAGE);
     }
+    
+    public int confirmMessage(JPanel contentPane) {
+    	return JOptionPane.showConfirmDialog(contentPane, "Do you want to proceed?", 
+    										 "Please confirm", JOptionPane.YES_NO_OPTION);
+    }
 }
