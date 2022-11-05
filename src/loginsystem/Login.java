@@ -66,12 +66,16 @@ public class Login extends HelperMethods {
 		JButton signInBtn = new JButton("Sign in");
 		signInBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Connection conn = null;
-			    conn = ConnectionManager.getConnection();
-			    String query = "SELECT * FROM users WHERE email = ? LIMIT 1";
-			    
-			    if((conn != null) && isComplete() && isEmailValid() && isPasswordValid()) {
-					getResultSet(conn, query);
+			    if(isComplete() && isEmailValid() && isPasswordValid()) {
+			    	Connection conn = null;
+				    conn = ConnectionManager.getConnection();
+				    String query = "SELECT * FROM users WHERE email = ? LIMIT 1";
+				    
+				    if(conn != null) {
+				    	getResultSet(conn, query);
+				    } else {
+						errorMessage("There is something wrong with the server.", contentPane);
+					}
 			    } else if (!isComplete()){
 					errorMessage("Fields cannot be empty!", contentPane);
 				} else if(!isEmailValid()) {

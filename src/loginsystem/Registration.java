@@ -92,7 +92,7 @@ public class Registration extends HelperMethods {
 					errorMessage("Fields cannot be empty!", contentPane);
 				} else if(!isEmailValid()) {
 					errorMessage("Please enter a valid email!", contentPane);
-				} else if (isEmailNotTaken()) {
+				} else if (!isEmailNotTaken()) {
 					errorMessage("Email is already taken! Please try another email.", contentPane);
 				} else if(!isSamePassword()) {
 					errorMessage("Passwords should be the same!", contentPane);
@@ -207,21 +207,21 @@ public class Registration extends HelperMethods {
     	Connection conn = null;
 		ResultSet rs = null;
 	    conn = ConnectionManager.getConnection();
-	    String query = "SELECT * FROM users WHERE email = ?;";
+	    String query = "SELECT * FROM users WHERE email = ?";
 	    
     	try(PreparedStatement stmt = conn.prepareStatement(query)) {
 			stmt.setString(1, emailTextField.getText());
 			rs = stmt.executeQuery();
 			
 			if(rs.next()) {
-				return true;
+				return false;
 			}
 			conn.close();
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
     	
-    	return false;
+    	return true;
 	}
     
     private void runQuery(Connection con, String qry) {
