@@ -4,7 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 import java.awt.Color;
@@ -18,7 +17,7 @@ import java.sql.ResultSet;
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
-public class Login extends HashPass {
+public class Login extends HelperMethods {
 
 	private JFrame frame = new JFrame();
 	private JPanel contentPane;
@@ -68,44 +67,19 @@ public class Login extends HashPass {
 		signInBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Connection conn = null;
-			    ResultSet rs = null;
-			    
 			    conn = ConnectionManager.getConnection();
 			    String query = "SELECT * FROM users WHERE email = ? LIMIT 1";
 			    
 			    if((conn != null) && isComplete() && isEmailValid() && isPasswordValid()) {
-					try(PreparedStatement stmt = conn.prepareStatement(query)) {
-						stmt.setString(1, emailTextField.getText());
-						rs = stmt.executeQuery();
-						
-						if (rs.isBeforeFirst()) {
-							readResultSet(rs);
-						} else {
-							JOptionPane.showMessageDialog(contentPane, 
-									  "Wrong email or password!", 
-									  "Error", JOptionPane.ERROR_MESSAGE);
-						}
-							
-						conn.close();
-					} catch(Exception ex) {
-						ex.printStackTrace();
-					}
+					getResultSet(conn, query);
 			    } else if (!isComplete()){
-					JOptionPane.showMessageDialog(contentPane, 
-							  "Fields cannot be empty!", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("Fields cannot be empty!", contentPane);
 				} else if(!isEmailValid()) {
-					JOptionPane.showMessageDialog(contentPane, 
-							  "Please enter a valid email!", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("Please enter a valid email!", contentPane);
 				} else if (!isPasswordValid()) {
-					JOptionPane.showMessageDialog(contentPane, 
-							  "Password length should be atleast 8 characters!", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("Password length should be atleast 8 characters!", contentPane);
 				} else {
-					JOptionPane.showMessageDialog(contentPane, 
-							  "There is something wrong with the server.", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("There is something wrong with the server.", contentPane);
 				}
 			}
 		});
@@ -145,9 +119,8 @@ public class Login extends HashPass {
     	return (passwordField.getPassword().length >= 8);
     }
     
-    private boolean isEmailValid()
-    {
-        String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"; 
+    private boolean isEmailValid() {
+    	String emailRegex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[\\a-zA-Z]{2,6}"; 
 
         Pattern pat = Pattern.compile(emailRegex);
         if (emailTextField.getText() == null)
@@ -166,20 +139,32 @@ public class Login extends HashPass {
 				System.out.println(rst.getInt("user_id"));
 
 				if(email.equals(rst.getString("email")) && toHexString(getSHA(password)).equals(rst.getString("password"))) {
-					JOptionPane.showMessageDialog(contentPane, 
-							  "User found! You are now logged in.", 
-							  "Success", JOptionPane.INFORMATION_MESSAGE);
+					successMessage("User found! You are now logged in.", contentPane);
 					new Details(userId);
 					frame.dispose();
 				} else {
-					JOptionPane.showMessageDialog(contentPane, 
-							  "Wrong email or password!", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("Wrong email or password", contentPane);
 				}
 			}
 	    } catch (Exception ex) {
 	    	ex.printStackTrace();
 	    }
     }
-
+    
+    private void getResultSet(Connection con, String qry) {
+    	ResultSet rst = null;
+    	try(PreparedStatement stmt = con.prepareStatement(qry)) {
+			stmt.setString(1, emailTextField.getText());
+			rst = stmt.executeQuery();
+			
+			if (rst.isBeforeFirst()) {
+				readResultSet(rst);
+			} else {
+				errorMessage("Wrong email or password!", contentPane);
+			}
+			con.close();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+    }
 }

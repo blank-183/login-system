@@ -5,7 +5,10 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class HashPass {
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+public class HelperMethods {
 	public byte[] getSHA(String input) throws NoSuchAlgorithmException
     {
         // Static getInstance method is called with hashing SHA
@@ -32,5 +35,17 @@ public class HashPass {
         }
  
         return hexString.toString();
+    }
+    
+    public void successMessage(String message, JPanel contentPane) {
+    	JOptionPane.showMessageDialog(contentPane, 
+				  message, 
+				  "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public void errorMessage(String message, JPanel contentPane) {
+		JOptionPane.showMessageDialog(contentPane, 
+				  message, 
+				  "Error", JOptionPane.ERROR_MESSAGE);
     }
 }

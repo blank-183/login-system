@@ -5,7 +5,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JButton;
@@ -17,7 +16,7 @@ import java.sql.PreparedStatement;
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
-public class Registration extends HashPass {
+public class Registration extends HelperMethods {
 
 	private JFrame frame = new JFrame();
 	private JPanel contentPane;
@@ -72,59 +71,30 @@ public class Registration extends HashPass {
 		JButton registerBtn = new JButton("Register");
 		registerBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Connection conn = null;
-				// database connection
-				conn = ConnectionManager.getConnection();
-				// the mysql insert statement
-			    String query = "INSERT INTO USERS (first_name, last_name, address, email, password)" + " values (?, ?, ?, ?, ?)";
-				if((conn != null) && isComplete() && isEmailValid() && isSamePassword() && isPasswordValid()) {
-					try {
-					    // create the mysql insert preparedstatement
-					    try(PreparedStatement stmt = conn.prepareStatement(query)) {
-					        stmt.setString(1, firstNameTextField.getText());
-					        stmt.setString(2, lastNameTextField.getText());
-						    stmt.setString(3, addressTextField.getText());
-						    stmt.setString(4, emailTextField.getText());
-						    stmt.setString(5, toHexString(getSHA(new String(passwordField.getPassword()))));
-						    
-						 // execute the prepared statement
-						    stmt.execute();
-					    }
-					    conn.close();
-
-					} catch (Exception err) {
-						System.err.println(err.getMessage());
+				if(isComplete() && isEmailValid() && isSamePassword() && isPasswordValid()) {
+					Connection conn = null;
+					conn = ConnectionManager.getConnection();
+				    String query = "INSERT INTO USERS (first_name, last_name, address, email, password)" + " values (?, ?, ?, ?, ?)";
+				    
+				    if(conn != null) {
+				    	runQuery(conn, query);
+						successMessage("Your registration is successful! You can now log in.", contentPane);
+						new Login();
+						frame.dispose();
+				    } else {
+						errorMessage("There is something wrong with the server.", contentPane);
 					}
-					
-					JOptionPane.showMessageDialog(contentPane, 
-												  "Your registration is successful! You can now log in.", 
-												  "Success", JOptionPane.INFORMATION_MESSAGE);
-					new Login();
-					frame.dispose();
-					
 				} else if (!isComplete()){
-					JOptionPane.showMessageDialog(contentPane, 
-							  "Fields cannot be empty!", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("Fields cannot be empty!", contentPane);
 				} else if(!isEmailValid()) {
-					JOptionPane.showMessageDialog(contentPane, 
-							  "Please enter a valid email!", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("Please enter a valid email!", contentPane);
 				} else if(!isSamePassword()) {
-					JOptionPane.showMessageDialog(contentPane, 
-							  "Passwords should be the same!", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("Passwords should be the same!", contentPane);
 				} else if (!isPasswordValid()) {
-					JOptionPane.showMessageDialog(contentPane, 
-							  "Password length should be atleast 8 characters!", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("Password length should be atleast 8 characters!", contentPane);
 				} else {
-					JOptionPane.showMessageDialog(contentPane, 
-							  "There is something wrong with the server.", 
-							  "Error", JOptionPane.ERROR_MESSAGE);
+					errorMessage("Cannot resolve error! Please try again.", contentPane);
 				}
-				
-				
 			}
 		});
 		registerBtn.setForeground(new Color(255, 255, 255));
@@ -220,11 +190,27 @@ public class Registration extends HashPass {
     
     private boolean isEmailValid()
     {
-        String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+(?:\\.[a-zA-Z0-9_!#$%&'*+/=?`{|}~^-]+)*@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$"; 
+        String emailRegex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[\\a-zA-Z]{2,6}";
 
         Pattern pat = Pattern.compile(emailRegex);
         if (emailTextField.getText() == null)
             return false;
         return pat.matcher(emailTextField.getText()).matches();
+    }
+    
+    private void runQuery(Connection con, String qry) {
+    	try(PreparedStatement stmt = con.prepareStatement(qry)) {
+	        stmt.setString(1, firstNameTextField.getText());
+	        stmt.setString(2, lastNameTextField.getText());
+		    stmt.setString(3, addressTextField.getText());
+		    stmt.setString(4, emailTextField.getText());
+		    stmt.setString(5, toHexString(getSHA(new String(passwordField.getPassword()))));
+		    
+		 // execute the prepared statement
+		    stmt.execute();
+		    con.close();
+    	} catch (Exception err) {
+    		System.err.println(err.getMessage());
+    	}
     }
 }
