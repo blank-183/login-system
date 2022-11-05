@@ -75,7 +75,7 @@ public class Registration extends HelperMethods {
 				if(!isValidLength()) {
 					return;
 				}
-				if(isComplete() && isEmailValid() && !isEmailTaken() && isSamePassword() && isPasswordValid()) {
+				if(isComplete() && isEmailValid() && isEmailNotTaken() && isSamePassword() && isPasswordValid()) {
 					Connection conn = null;
 					conn = ConnectionManager.getConnection();
 				    String query = "INSERT INTO USERS (first_name, last_name, address, email, password)" + " values (?, ?, ?, ?, ?)";
@@ -92,7 +92,7 @@ public class Registration extends HelperMethods {
 					errorMessage("Fields cannot be empty!", contentPane);
 				} else if(!isEmailValid()) {
 					errorMessage("Please enter a valid email!", contentPane);
-				} else if (isEmailTaken()) {
+				} else if (isEmailNotTaken()) {
 					errorMessage("Email is already taken! Please try another email.", contentPane);
 				} else if(!isSamePassword()) {
 					errorMessage("Passwords should be the same!", contentPane);
@@ -203,7 +203,7 @@ public class Registration extends HelperMethods {
         return pat.matcher(emailTextField.getText()).matches();
     }
     
-    private boolean isEmailTaken() {
+    private boolean isEmailNotTaken() {
     	Connection conn = null;
 		ResultSet rs = null;
 	    conn = ConnectionManager.getConnection();
