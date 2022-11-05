@@ -78,7 +78,7 @@ public class Registration extends HelperMethods {
 				if(isComplete() && isEmailValid() && isEmailNotTaken() && isSamePassword() && isPasswordValid()) {
 					Connection conn = null;
 					conn = ConnectionManager.getConnection();
-				    String query = "INSERT INTO USERS (first_name, last_name, address, email, password)" + " values (?, ?, ?, ?, ?)";
+				    String query = "INSERT INTO USERS (first_name, last_name, address, email, password)" + " VALUES (?, ?, ?, ?, ?)";
 				    
 				    if(conn != null) {
 				    	runQuery(conn, query);

@@ -50,7 +50,7 @@ public class HelperMethods {
     }
     
     public int confirmMessage(JPanel contentPane) {
-    	return JOptionPane.showConfirmDialog(contentPane, "Do you want to proceed?", 
+    	return JOptionPane.showConfirmDialog(contentPane, "Do you want to log out?", 
     										 "Please confirm", JOptionPane.YES_NO_OPTION);
     }
 }

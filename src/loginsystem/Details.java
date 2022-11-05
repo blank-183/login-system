@@ -74,6 +74,8 @@ public class Details extends HelperMethods {
 		
 		nameTextField = new JTextField();
 		nameTextField.setEditable(false);
+		nameTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		nameTextField.setBackground(new Color(255, 255, 255));
 		nameTextField.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		nameTextField.setBounds(126, 94, 400, 44);
 		contentPane.add(nameTextField);
@@ -81,6 +83,8 @@ public class Details extends HelperMethods {
 		
 		emailTextField = new JTextField();
 		emailTextField.setEditable(false);
+		emailTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		emailTextField.setBackground(new Color(255, 255, 255));
 		emailTextField.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		emailTextField.setColumns(10);
 		emailTextField.setBounds(126, 159, 400, 44);
@@ -88,6 +92,8 @@ public class Details extends HelperMethods {
 		
 		addressTextField = new JTextField();
 		addressTextField.setEditable(false);
+		addressTextField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		addressTextField.setBackground(new Color(255, 255, 255));
 		addressTextField.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		addressTextField.setColumns(10);
 		addressTextField.setBounds(126, 225, 400, 44);
