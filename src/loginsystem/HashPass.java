@@ -5,10 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-
-public class HelperMethods {
+public class HashPass {
 	public byte[] getSHA(String input) throws NoSuchAlgorithmException
     {
         // Static getInstance method is called with hashing SHA
@@ -35,22 +32,5 @@ public class HelperMethods {
         }
  
         return hexString.toString();
-    }
-    
-    public void successMessage(String message, JPanel contentPane) {
-    	JOptionPane.showMessageDialog(contentPane, 
-				  message, 
-				  "Success", JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    public void errorMessage(String message, JPanel contentPane) {
-		JOptionPane.showMessageDialog(contentPane, 
-				  message, 
-				  "Error", JOptionPane.ERROR_MESSAGE);
-    }
-    
-    public int confirmMessage(JPanel contentPane) {
-    	return JOptionPane.showConfirmDialog(contentPane, "Do you want to log out?", 
-    										 "Please confirm", JOptionPane.YES_NO_OPTION);
     }
 }

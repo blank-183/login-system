@@ -16,7 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 
-public class Details extends HelperMethods {
+public class Details extends Message {
 	
 	private JFrame frame = new JFrame();
 	private JPanel contentPane;
@@ -58,7 +58,7 @@ public class Details extends HelperMethods {
 		JButton logOutBtn = new JButton("Log out");
 		logOutBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(confirmMessage(contentPane) == JOptionPane.YES_OPTION) {
+				if(confirmMessage("Do you want to log out?", contentPane) == JOptionPane.YES_OPTION) {
 					new Login();
 					frame.dispose();
 				}

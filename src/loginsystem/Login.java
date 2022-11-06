@@ -17,7 +17,7 @@ import java.sql.ResultSet;
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
 
-public class Login extends HelperMethods {
+public class Login extends Message {
 
 	private JFrame frame = new JFrame();
 	private JPanel contentPane;
